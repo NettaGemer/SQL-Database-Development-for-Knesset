@@ -1,8 +1,8 @@
 We had a case story in Hebrew (to be translated here in English) from which we drew an ERD. From the ERD we built schemas.
 **Case history:**
 The thirty-seventh Israeli government (also known as the sixth Netanyahu government) received the confidence of the twenty-fifth Knesset and was sworn in on December 29, 2022. Since then, the government has been feverishly engaged in implementing and promoting many legislative actions. The legislation is met with strong opposition from the opposition and parts of the public, and each vote requires both the coalition and From the opposition to mobilize the members of the Knesset to support/oppose the legislation Regarding the update, the member of the Knesset making the update must know the affiliation of the Knesset members by party. The update should of course include the details of the law in question brought to the vote, and will include, among other things, the subject of the law (e.g. the gift law), the proposal number (e.g. proposal number P2303/25/ which was brought to a vote under vote No. 3, see link), the member of Knesset who initiated the law, the government office to which the law relates, the budgetary cost, as well as the type of reading (preliminary/first/second/third). Also, the system must record the The actual votes on the various laws.
-**Question 1 -** Create an ERD diagram for the above description - attached as a picture.
-**Question 2 -** Schema construction
+**Question 1 -** **Create an ERD diagram for the above description - attached as a picture.**
+**Question 2 -** **Schema construction**
 **solution-**
 Member of Knesset (id, party, name, Knesset government office)
 Updating (id1 (FK), id2(FK), update number (FK), voting number (FK), offer number (FK) execution date, arrival status, updating content)
@@ -21,7 +21,8 @@ Update(intentionToAttend ,updateTime, politicianID(FK) ,politicianID(FK), offerI
 Vote(voteID,  voteResult , politicianID(FK), offerID(FK))
 BelongsTo(politicianID(FK), officeId(FK))
 **Question 3 -**
-**A.** Create a database for the agreement you made.
+**A.** **Create a database for the agreement you made.**
+
 **solution-** 
 CREATE database KNESSET;
 use KNESSET;
@@ -87,7 +88,8 @@ foreign key(Politician) references Politician(politicianID),
 foreign key(GovernmentOffice) references GovernmentOffice(officeId),
 primary key (Politician,GovernmentOffice)
 );
-**B.** Add at least 5 records to each of the tables
+**B.** **Add at least 5 records to each of the tables**
+
 **solution-**
 INSERT INTO GovernmentOffice value(10, 'Department of Transportation');
 INSERT INTO GovernmentOffice value(20, 'Department of Defence');
@@ -147,6 +149,7 @@ Since government ministries have different budgets, and since different bills ha
 You must also document (ii) (the minister's role in the ministry, for example Galant) - Minister of Defense,
 Smotritz - Minister in the Ministry of Defense, and the dates on which they served in their positions in the Ministry.
 In addition, you must document (iii) the city, street and number of the building where the office is located (it can be assumed that there is only one building).
+
 **solution-**
  alter table GovernmentOffice add office_budget int;
  alter table BelongsTo add role_in_office VARCHAR(40);
@@ -156,8 +159,9 @@ In addition, you must document (iii) the city, street and number of the building
  alter table GovernmentOffice add office_street VARCHAR(30);
  alter table GovernmentOffice add building_number int;
 
-**D.** We have updated the existing records and/or tables (in the DML context) so that they reflect the new requirements mentioned above.
-If there is no need to change, provide a detailed explanation why there is no need to change
+**D.** **We have updated the existing records and/or tables (in the DML context) so that they reflect the new requirements mentioned above.
+If there is no need to change, provide a detailed explanation why there is no need to change.**
+
 **solution-**
 update  GovernmentOffice set office_budget = '800000' where OfficeId= 10;                  
 update  BelongsTo set role_in_office= 'Minister of Transportation' where GovernmentOffice = 10 and Politician = 111;
@@ -199,31 +203,36 @@ update  BelongsTo set role_in_office= 'Foreign Minister' where GovernmentOffice 
 update  BelongsTo set Date_of_starting_position = '2021-01-01' where GovernmentOffice = 50 and Politician = 555;
 update  BelongsTo set Job_end_date = '2023-01-01' where GovernmentOffice = 50 and Politician = 555;
 
-**E.** Create a query that will give the number of government offices
+**E.** **Create a query that will give the number of government offices**
+
 **solution-**
 select count(officeId) as count_office_id
 from GovernmentOffice
 where officeId <> 0; 
 
-**F.** Present the names of the members of the Knesset who belong to a government ministry, as well as their position in the ministry, and the name of the ministry.
+**F.** **Present the names of the members of the Knesset who belong to a government ministry, as well as their position in the ministry, and the name of the ministry.**
+
 **solution-**
 select firstName,lastNme,role_in_office,officeName
 from BelongsTo INNER join Politician on BelongsTo.Politician = Politician.politicianID 
 inner join GovernmentOffice on BelongsTo.GovernmentOffice = GovernmentOffice.officeId
 where officeId <> 0 ; 
 
-**G.** What is the voting percentage in the twenty-fifth Knesset?
+**G.** **What is the voting percentage in the twenty-fifth Knesset?**
+
 **solution-**
  select count(voteID)/(count(distinct voteID , Rule)*count(politicianID)) * 100 as vote_precent
    from Vote inner join Politician on Politician.politicianID=Vote.Politician;
    
-**H.** Present the total costs required for each government office to approve all the laws introduced in the twenty-fifth Knesset and associated with it.
+**H.** **Present the total costs required for each government office to approve all the laws introduced in the twenty-fifth Knesset and associated with it.**
+
 **solution-**
  select officeName , sum(budget) as sum_budget
 from GovernmentOffice inner join Rule on GovernmentOffice.officeId = Rule.GovernmentOffice
 group by officeName;
 
-**I.** They presented the names of the Knesset members who initiated laws, the total costs of which were over NIS 100,000,000. The display should be sorted by the total costs, and by the names of the members of the Knesset.
+**I.** **They presented the names of the Knesset members who initiated laws, the total costs of which were over NIS 100,000,000. The display should be sorted by the total costs, and by the names of the members of the Knesset.**
+
 **solution-**
 select politicianID ,firstName,lastNme ,sum(Rule.budget)  as total_cost from Politician
 inner join Rule on Politician.GovernmentOffice= Rule.GovernmentOffice
@@ -231,7 +240,8 @@ group by politicianID,firstName,lastNme
 having sum(Rule.budget) > 100000000
 order by total_cost DESC, Politician.lastNme  ASC;
 
-**J.** Create a new table that will contain the output of section I
+**J.** **Create a new table that will contain the output of section I**
+
 **solution-**
 CREATE TABLE laws_over_100_milion
 as(select politicianID ,firstName,lastNme ,sum(Rule.budget) as total_cost from Politician
@@ -240,7 +250,8 @@ group by politicianID,firstName,lastNme
 having sum(Rule.budget) > 100000000
 order by total_cost DESC, Politician.lastNme ASC);
 
-**K.** Delete from the table you created in section J all the records in which the income is less than the average in the above table.
+**K.** **Delete from the table you created in section J all the records in which the income is less than the average in the above table.**
+
 **solution-**
 CREATE TEMPORARY TABLE temp_delete AS
 SELECT * FROM laws_over_100_milion
