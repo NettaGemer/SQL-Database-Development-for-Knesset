@@ -1,8 +1,11 @@
 We had a case story in Hebrew (to be translated here in English) from which we drew an ERD. From the ERD we built schemas.
 **Case history:**
 The thirty-seventh Israeli government (also known as the sixth Netanyahu government) received the confidence of the twenty-fifth Knesset and was sworn in on December 29, 2022. Since then, the government has been feverishly engaged in implementing and promoting many legislative actions. The legislation is met with strong opposition from the opposition and parts of the public, and each vote requires both the coalition and From the opposition to mobilize the members of the Knesset to support/oppose the legislation Regarding the update, the member of the Knesset making the update must know the affiliation of the Knesset members by party. The update should of course include the details of the law in question brought to the vote, and will include, among other things, the subject of the law (e.g. the gift law), the proposal number (e.g. proposal number P2303/25/ which was brought to a vote under vote No. 3, see link), the member of Knesset who initiated the law, the government office to which the law relates, the budgetary cost, as well as the type of reading (preliminary/first/second/third). Also, the system must record the The actual votes on the various laws.
+
 **Question 1 -** **Create an ERD diagram for the above description - attached as a picture.**
+
 **Question 2 -** **Schema construction**
+
 **solution-**
 Member of Knesset (id, party, name, Knesset government office)
 Updating (id1 (FK), id2(FK), update number (FK), voting number (FK), offer number (FK) execution date, arrival status, updating content)
@@ -20,6 +23,7 @@ Offer(offerID(FK), politicianID(FK))
 Update(intentionToAttend ,updateTime, politicianID(FK) ,politicianID(FK), offerID(FK)) 
 Vote(voteID,  voteResult , politicianID(FK), offerID(FK))
 BelongsTo(politicianID(FK), officeId(FK))
+
 **Question 3 -**
 **A.** **Create a database for the agreement you made.**
 
@@ -88,6 +92,7 @@ foreign key(Politician) references Politician(politicianID),
 foreign key(GovernmentOffice) references GovernmentOffice(officeId),
 primary key (Politician,GovernmentOffice)
 );
+
 **B.** **Add at least 5 records to each of the tables**
 
 **solution-**
